@@ -30,4 +30,33 @@
     * possibly just keep some internal db of what user ids do and don't have certain permissions?
         * does this work with function decorators?
 
+## Things I've done
+### July 15 2023
+* installed virtualenv in poker-web-app directory <!-- Source: https://www.youtube.com/watch?v=Z1RJmh_OqeA&ab_channel=freeCodeCamp.org -->
+``` sh
+pip install virtualenv
+virtualenv env
+source env/bin/activate
+pip install flask flask-sqlalchemy
+```
+    * Got this error:
+
+    ```
+    xcrun: error: invalid active developer path (/Library/Developer/CommandLineTools), missing xcrun at: /Library/Developer/CommandLineTools/usr/bin/xcrun
+        error: command '/usr/bin/clang' failed with exit code 1
+        [end of output]
+    
+    note: This error originates from a subprocess, and is likely not a problem with pip.
+    ERROR: Failed building wheel for greenlet
+    Running setup.py clean for greenlet
+    Failed to build greenlet
+    ERROR: Could not build wheels for greenlet, which is required to install pyproject.toml-based projects
+    ```
+
+    * Might be because I deleted XCode oops. I just couldn't stand everything opening with xcode when I want vscode sue me. We'll see if it causes any issues.
+
+    * Downloaded xcode, configured it, reran, and everything fine
+
+
+
 ## Random notes
