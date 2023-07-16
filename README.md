@@ -31,7 +31,7 @@
         * does this work with function decorators?
 
 ## Things I've done
-### July 15 2023
+### July 15, 2023
 * installed virtualenv in poker-web-app directory <!-- Source: https://www.youtube.com/watch?v=Z1RJmh_OqeA&ab_channel=freeCodeCamp.org -->
 ``` sh
 pip install virtualenv
@@ -57,6 +57,6 @@ pip install flask flask-sqlalchemy
 
     * Downloaded xcode, configured it, reran, and everything fine
 
-
+### July 16, 2023
 
 ## Random notes
