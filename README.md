@@ -30,8 +30,20 @@
     * possibly just keep some internal db of what user ids do and don't have certain permissions?
         * does this work with function decorators?
 
+## Environment
+The `env/` folder is ignored in the repository. Follow the following in poker-web-app to replicate the repository's required environment (assuming you have python 3):
+```sh
+pip install virtualenv
+virtualenv env
+source env/bin/activate
+pip install flask
+```
 
 ## Database
+### Set up database
+The poker.db file is not contained in the repository, since in production it stores account information, cash totals, etc. You wouldn't want your friends to know how much fake money is in your account on this website. To create it yourself, execute
+`sqlite3 poker.db` then run the contents of init_db.sql from that prompt.
+
 * the database does track:
     * Time and date of:
         * players joining the site

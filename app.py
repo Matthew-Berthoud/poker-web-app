@@ -10,24 +10,7 @@ app.config["SESSION_TYPE"] = "filesystem"  # Decided against SQLAlchemy: https:/
     # Sessions last 31 days by default in Flask
 Session(app)
 
-# db = sqlite3.connect("sqlite:///poker.db")
-
-# Example code about Alchemy DB
-# Source: https://www.youtube.com/watch?v=Z1RJmh_OqeA
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-#     # 4 slashes is absolute path, 3 is relative path, we just want db to live with project somewhere
-# db = SQLAlchemy(app)
-    
-# class Todo(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     content = db.Column(db.String(200), nullable=False)
-#     date_created = db.Column(db.DateTime, default=datetime.utcnow)
-
-#     def __repr__(self):
-#         return '<Task %r>' % self.id
-
-
-
+db = sqlite3.connect('poker.db').cursor()
 
 
 @app.route("/")
