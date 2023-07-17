@@ -1,0 +1,13 @@
+{% extends "settings.html" %}
+
+{% block changes %}
+    <form action="/settings/balance" method="post">
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="deposit" placeholder="Deposit" type="number" min="0.00" max="10000.00" step="0.01">
+        </div>
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="withdrawal" placeholder="Withdraw" type="number" min="0.00" max="{{ player.cash }}" step="0.01" />
+        </div>
+        <button class="btn btn-primary" type="submit">Update</button>
+    </form>
+{% endblock %}

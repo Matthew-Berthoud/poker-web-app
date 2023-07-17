@@ -1,9 +1,9 @@
-# import os
+import os
 
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
-# from tempfile import mkdtemp
+from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from helpers import login_required, usd
@@ -19,6 +19,9 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///poker.db")
 
+# Jinja Filter
+app.jinja_env.filters["usd"] = usd
+
 
 @app.route("/", methods=["GET", "POST"])
 @login_required
@@ -26,7 +29,8 @@ def index():
     if request.method == "POST":
         return redirect("/play")
     else:
-        return render_template("index.html")
+        account = db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])
+        return render_template("index.html", player=account[0]["username"], cash=account[0]["cash"])
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -76,10 +80,85 @@ def logout():
     session.clear()
     return redirect("/")
 
+
 @app.route("/play")
 @login_required
 def play():
     return render_template("play.html")
+
+
+@app.route("/settings")
+@login_required
+def settings():
+    return render_template("settings.html", player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0])
+
+
+@app.route("/settings/username", methods=["GET", "POST"])
+@login_required
+def change_username():
+    player = db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
+    if request.method == "POST":
+        new = request.form.get("new")
+        old = player["username"]
+        rows = db.execute("SELECT * FROM players WHERE username = ?", new)
+        if len(rows) > 0 and new != old:
+            return "username already in use"
+        db.execute("UPDATE players SET username = ? WHERE player_id = ?", new, session["user_id"])
+        flash("Username changed")
+        return redirect("/settings")
+    else:
+        return render_template("username.html", player=player)
+
+
+@app.route("/settings/password", methods=["GET", "POST"])
+@login_required
+def change_password():
+    player = db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
+    if request.method == "POST":
+        old = request.form.get("old")
+        new = request.form.get("new")
+        conf = request.form.get("confirmation")
+        if not check_password_hash(player["pswd_hash"], old):
+            return "old password incorrect"
+        if new != conf:
+            return "new passwords do not match"
+        db.execute("UPDATE players SET pswd_hash = ? WHERE player_id = ?", generate_password_hash(new), session["user_id"])
+        flash("Password changed")
+        return redirect("/settings")
+    else:
+        return render_template("password.html", player=player)
+
+
+@app.route("/settings/balance", methods=["GET", "POST"])
+@login_required
+def change_balance():
+    if request.method == "POST":
+        deposit = request.form.get("deposit")
+        withdrawal = request.form.get("withdrawal")
+
+        # most error checking handled by min, max, and step attributes in the template
+        # check that one and only one of the fields has an entry
+        if not (bool(deposit) ^ bool(withdrawal)):
+            return "enter dollar amount in exactly one field"
+        if bool(deposit):
+            update = float(deposit)
+        if bool(withdrawal):
+            update = -1 * float(withdrawal)
+        db.execute("UPDATE players SET cash = cash + ? WHERE player_id = ?", update, session["user_id"])
+        flash("Bankroll updated")
+        return redirect("/settings")
+    else:
+        return render_template("bankroll.html", player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0])
+    
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

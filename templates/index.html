@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ player }}'s Bankroll: {{ cash }}</h1>
+    <h1>{{ player }}'s Bankroll: {{ cash | usd}}</h1>
     <form action="/" method="post">
         <button class="btn btn-primary" type="submit">Play</button>
     </form>

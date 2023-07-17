@@ -1,0 +1,10 @@
+{% extends "settings.html" %}
+
+{% block changes %}
+    <form action="/settings/username" method="post">
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" name="new" placeholder="New Username" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Change</button>
+    </form>
+{% endblock %}
