@@ -99,3 +99,11 @@ pip install flask flask-sqlalchemy
         * LEARN MORE ABOUT ENVIRONMENT
 * Session info and sources is in comments on app.py
 * don't really get how sql stuff is linked, or how this database is joining the project
+
+
+### July 17, 2023
+* Having tons of trouble with sql. I want to avoid using the cs50 library, which abstracts the connecting of the SQL database. I thought it would be similar to just use sqlite3, but it got weird and I didn't know what was happening
+* I'm using SQAlchemy now, which is weird cause it abstracts queries into python code, but if I just use `db.session.execute(text())` it will be more like real SQL? I guess?
+* There are already some differences in syntax to sqlite3, but hopefully not many
+
+* NEVER MIND ALL OF THAT: I AM USING THE CS50 LIBRARY I DON'T UNDERSTAND ALL THIS DATABASE STUFF

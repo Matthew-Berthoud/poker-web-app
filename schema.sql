@@ -1,3 +1,10 @@
+DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS rounds;
+DROP TABLE IF EXISTS games;
+DROP TABLE IF EXISTS hands;
+DROP TABLE IF EXISTS action;
+
+
 CREATE TABLE players (
     player_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
     date_joined DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -32,10 +39,15 @@ CREATE TABLE hands (
     cash_change NUMERIC NOT NULL
 );
 
+CREATE TABLE action (
+    player_id INTEGER NOT NULL,
+    round_id INTEGER NOT NULL,
+    betting_round INTEGER NOT NULL, -- round 1 is preflop, etc
+    action_string TEXT NOT NULL
+        -- EXAMPLE: checks, then calls someone's 20.00 raise, 
+        -- then calls someone re-raised to 40.00 (20 more in)
+        -- then folds to another reraise
 
-
--- If I need to reset:
--- DROP TABLE players;
--- DROP TABLE rounds;
--- DROP TABLE games;
--- DROP TABLE hands;
+        -- "check 0.00 call 20.00 call 20.00 fold 0.00"
+        -- can use split() to decompose for data analysis
+);
