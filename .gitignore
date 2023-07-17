@@ -159,6 +159,14 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Things Matthew added:
+
+
+
+
+
+### Things Matthew added:
 # Databases
 .db
+
+#flask_session folder
+flask_session/
