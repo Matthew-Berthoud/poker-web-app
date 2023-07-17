@@ -107,3 +107,5 @@ pip install flask flask-sqlalchemy
 * There are already some differences in syntax to sqlite3, but hopefully not many
 
 * NEVER MIND ALL OF THAT: I AM USING THE CS50 LIBRARY I DON'T UNDERSTAND ALL THIS DATABASE STUFF
+    * Basically stealing the first 20ish lines of code from app.py for the finance project. Also using lots of the login/logout stuff. Why redo what works/I'm used to?
+    * Learn the details of databases and servers and stuff later, right now I have a poker app to build
