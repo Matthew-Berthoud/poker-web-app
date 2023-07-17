@@ -109,3 +109,4 @@ pip install flask flask-sqlalchemy
 * NEVER MIND ALL OF THAT: I AM USING THE CS50 LIBRARY I DON'T UNDERSTAND ALL THIS DATABASE STUFF
     * Basically stealing the first 20ish lines of code from app.py for the finance project. Also using lots of the login/logout stuff. Why redo what works/I'm used to?
     * Learn the details of databases and servers and stuff later, right now I have a poker app to build
+* I'm moving on to the actual poker logic stuff, but if I ever want to limit sessions, so people can't log into the same account from two different places at the same time can use this type stuff: https://stackoverflow.com/questions/31281470/how-to-limit-one-session-from-any-browser-for-a-username-in-flask
