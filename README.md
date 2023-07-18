@@ -110,3 +110,10 @@ pip install flask flask-sqlalchemy
     * Basically stealing the first 20ish lines of code from app.py for the finance project. Also using lots of the login/logout stuff. Why redo what works/I'm used to?
     * Learn the details of databases and servers and stuff later, right now I have a poker app to build
 * I'm moving on to the actual poker logic stuff, but if I ever want to limit sessions, so people can't log into the same account from two different places at the same time can use this type stuff: https://stackoverflow.com/questions/31281470/how-to-limit-one-session-from-any-browser-for-a-username-in-flask
+
+* Did betting logic I think
+* Tomorrow: 
+    * UNIT TESTS for play_betting_round as well as basic tests of Table and Seat classes, make sure things work how I want
+    * Then add in pot, individual chip stacks, 
+* Note that play_betting_round cycles through every seat, occupied or not, folded or not, and then decides to maybe break with that super long if statement.
+    * it is okay to start at small blind every time cause it's emptiness / the weirdness of the first round will we accounted for in the huge if statement.

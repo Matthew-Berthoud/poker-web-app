@@ -7,4 +7,6 @@ class Seat:
         self.is_big_blind = False
 
         self.seat_number = seat_number
-        self.player_number = 0
+        self.player_id = 0
+        
+        self.current_bet = 0.00
