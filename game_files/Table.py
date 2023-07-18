@@ -1,9 +1,19 @@
-from Seat import *
-
 class Table:
 
+    class __Table_Seat:
+        def __init__(self, seat_number):
+            self.is_occupied = False
+            self.is_dealer = False
+            self.is_small_blind = False
+            self.is_big_blind = False
+
+            self.seat_number = seat_number
+            self.player_id = 0
+            
+            self.current_bet = 0.00
+
     def __init__(self, maximum_seats = 10):
-        self.seat_list = [Seat(seat_number) for seat_number in range(1, maximum_seats + 1)]
+        self.seat_list = [self.__Table_Seat(seat_number) for seat_number in range(1, maximum_seats + 1)]
 
         self.round_number = 1            # "Round" ends when new cards are dealt
         self.betting_round_number = 1    # round 1 is preflop, etc
@@ -25,7 +35,7 @@ class Table:
         lap_number = 1
 
         while True:
-            if seat = starting_seat:
+            if seat == starting_seat:
                 lap_number += 1
 
             if (self.betting_round_number == 1 and lap_number == 1 \
@@ -68,11 +78,4 @@ class Table:
 
 
     def player_input(self):
-        # store it in who's up
-        
-       
-        
-
-
-
-    def player_input(self):
+        pass # store it in who's up
