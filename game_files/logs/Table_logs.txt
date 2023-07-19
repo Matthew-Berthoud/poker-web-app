@@ -1,0 +1,118 @@
+
+
+
+
+play_betting_round 1 small_blind_seat 1
+Seat 1 BET 5.0
+Seat 2 BET 10.0
+Seat 3 RAISE/BET 698
+Seat 4 RAISE/BET 901
+Seat 5 CALL/CHECK 901
+Seat 1 CALL/CHECK 901
+Seat 2 CALL/CHECK 901
+Seat 3 RAISE/BET 930
+Seat 1 CALL/CHECK 930
+Seat 2 FOLD 
+Seat 4 RAISE/BET 931
+Seat 1 FOLD 
+Seat 3 RAISE/BET 972
+Seat 4 FOLD 
+Seat 5 RAISE/BET 991
+Seat 3 RAISE/BET 997
+Seat 5 FOLD 
+
+
+
+
+play_betting_round 1 small_blind_seat 1
+Seat 1 BET 5.0
+Seat 2 BET 10.0
+Seat 3 RAISE/BET 292
+Seat 4 CALL/CHECK 292
+Seat 5 RAISE/BET 529
+Seat 1 RAISE/BET 677
+Seat 2 CALL/CHECK 677
+Seat 3 CALL/CHECK 677
+Seat 4 CALL/CHECK 677
+Seat 5 CALL/CHECK 677
+BREAKING WITH THESE VALUES:
+lap_number 3 seat 10 current_bet 677
+
+
+
+
+play_betting_round 2 small_blind_seat 1
+Seat 1 FOLD 
+Seat 2 CALL/CHECK 0.0
+Seat 3 RAISE/BET 737
+Seat 4 FOLD 
+Seat 5 FOLD 
+Seat 2 CALL/CHECK 737
+BREAKING WITH THESE VALUES:
+lap_number 2 seat 10 current_bet 737
+
+
+
+
+play_betting_round 3 small_blind_seat 1
+Seat 2 CALL/CHECK 0.0
+Seat 3 CALL/CHECK 0.0
+BREAKING WITH THESE VALUES:
+lap_number 2 seat 10 current_bet 0.0
+
+
+
+
+play_betting_round 4 small_blind_seat 1
+Seat 2 FOLD 
+
+
+
+
+play_betting_round 1 small_blind_seat 1
+Seat 1 RAISE/BET 5.0
+Seat 2 RAISE/BET 10.0
+Seat 3 RAISE/BET 386
+Seat 4 FOLD 
+Seat 5 RAISE/BET 815
+Seat 1 RAISE/BET 823
+Seat 2 RAISE/BET 840
+Seat 1 RAISE/BET 876
+Seat 2 RAISE/BET 917
+Seat 1 RAISE/BET 948
+Seat 2 CALL/CHECK 948
+Seat 3 CALL/CHECK 948
+Seat 5 CALL/CHECK 948
+BREAKING WITH THESE VALUES:
+lap_number 3 seat 10 current_bet 948
+
+
+
+
+play_betting_round 2 small_blind_seat 1
+Seat 1 CALL/CHECK 0.0
+Seat 2 CALL/CHECK 0.0
+Seat 3 CALL/CHECK 0.0
+Seat 5 FOLD 
+BREAKING WITH THESE VALUES:
+lap_number 2 seat 10 current_bet 0.0
+
+
+
+
+play_betting_round 3 small_blind_seat 1
+Seat 1 CALL/CHECK 0.0
+Seat 2 RAISE/BET 575
+Seat 3 RAISE/BET 986
+Seat 1 RAISE/BET 986
+Seat 2 RAISE/BET 997
+Seat 1 CALL/CHECK 997
+Seat 3 FOLD 
+BREAKING WITH THESE VALUES:
+lap_number 3 seat 10 current_bet 997
+
+
+
+
+play_betting_round 4 small_blind_seat 1
+Seat 1 FOLD 

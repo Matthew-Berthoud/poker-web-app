@@ -3,7 +3,6 @@ from random import shuffle
 
 FULL = 52
 
-
 class Deck:
 
 
