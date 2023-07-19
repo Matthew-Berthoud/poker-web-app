@@ -117,3 +117,28 @@ pip install flask flask-sqlalchemy
     * Then add in pot, individual chip stacks, 
 * Note that play_betting_round cycles through every seat, occupied or not, folded or not, and then decides to maybe break with that super long if statement.
     * it is okay to start at small blind every time cause it's emptiness / the weirdness of the first round will we accounted for in the huge if statement.
+
+
+*** July 18, 2023
+I thought Tables would have good methods for unit tests, but I don't know how to simulate player input and interaction with other functions / objects
+
+*** July 19, 2023
+* Today's plan is to 
+    * test the stuff I've done even more
+        * make necessary changes, commit
+    * move on to planning structurally how things interact
+        * where does bet inputting happen?
+        * where does hand evaluation happen?
+        * how does this all sync up?
+    * figure out what more I need out of the table class and FINISH IT
+        * commit
+* thoughts on how to do hand eval:
+    * get 7 card hand of every player. For each one:
+        * make all possible 5 card hands
+        * evaluate (this is the hardest part)
+        * give strongest one
+    * evaluate between the players (can be the same method as when we got the best hand for each player)
+    * return winner(s)
+* probably put current bet in the player class
+
+## AT SOME POINT I NEED TO ADD AN ALL-IN LIMIT TYPE THING TO THE METHODS IN THE TABLE CLASS, OR SIDE POTS WILL HAPPEN AND BE HANDLED IMPROPERLY
