@@ -1,12 +1,14 @@
 import os
-
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
-from flask_socketio import SocketIO, send, emit
-
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
+
+from flask_socketio import SocketIO, send, emit
+from time import gmtime, strftime  # gmtime is seconds since epoch in UTC
+# from datetime import datetime  # can use comparison operators. Eg: time = datetime.now()
+# problem is it's not serializable to json oops
 
 from helpers import login_required, usd
 
@@ -154,14 +156,14 @@ def change_balance():
 @app.route("/play", methods=['GET', 'POST'])
 @login_required
 def play():
-    return render_template("play.html")
+    return render_template("play.html", player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0])
 
 
 @socketio.on('message')
 def message(data):
     print(f"\n\n{data}\n\n")
-    send(data)
-    emit('some-event', 'this is a custom event message')
+    send({'username': data['username'], 'player_id': data['player_id'], 'action': data['action'], 'time': strftime(gmtime())})
+    
 
 
 

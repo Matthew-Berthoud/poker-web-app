@@ -11,7 +11,12 @@
     </div>
     <div id="table">
         <div id="seats">
-
+            <script> // send player info back to server
+                const player = `{{ player }}`;
+                const player_id = `{{ player.player_id }}`;
+                const username = `{{ player.username }}`;
+            </script>
+            <!-- <p id="player_username">{{ player.username }}</p> -->
 
         </div>
         <div id="middle">
@@ -38,5 +43,5 @@
         <button id="bet-or-raise" type="button">Bet/Raise</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
-    <script src="static/scripts/play.js"></script>
+    <script src="static/scripts/socketio.js"></script>
 {% endblock %}
