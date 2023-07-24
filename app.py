@@ -3,6 +3,8 @@ import os
 from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
+from flask_socketio import SocketIO, send, emit
+
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -18,6 +20,10 @@ Session(app)
 
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///poker.db")
+
+# Initialize Flask-SocketIO
+socketio = SocketIO(app)
+
 
 # Jinja Filter
 app.jinja_env.filters["usd"] = usd
@@ -79,12 +85,6 @@ def login():
 def logout():
     session.clear()
     return redirect("/")
-
-
-@app.route("/play")
-@login_required
-def play():
-    return render_template("play.html")
 
 
 @app.route("/settings")
@@ -151,7 +151,17 @@ def change_balance():
         return render_template("bankroll.html", player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0])
     
 
+@app.route("/play", methods=['GET', 'POST'])
+@login_required
+def play():
+    return render_template("play.html")
 
+
+@socketio.on('message')
+def message(data):
+    print(f"\n\n{data}\n\n")
+    send(data)
+    emit('some-event', 'this is a custom event message')
 
 
 
@@ -162,4 +172,4 @@ def change_balance():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    socketio.run(app, debug=True)

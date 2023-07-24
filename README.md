@@ -142,3 +142,14 @@ I thought Tables would have good methods for unit tests, but I don't know how to
 * probably put current bet in the player class
 
 ## AT SOME POINT I NEED TO ADD AN ALL-IN LIMIT TYPE THING TO THE METHODS IN THE TABLE CLASS, OR SIDE POTS WILL HAPPEN AND BE HANDLED IMPROPERLY
+
+## Sources
+
+* [Multiplayer flask game reddit post](https://www.reddit.com/r/flask/comments/if7po9/how_my_friend_and_i_built_a_multiplayer_game/?onetap_auto=true)
+    * [Tutorial for flask socketio](https://www.youtube.com/watch?v=zQDzNNt6xd4)
+        * For each player action:
+            * send json object with user_id as key, and a dictionary as value, where the dictionary has all the info that has been changed
+            * Can do something like this both directions
+        * join room / leave room
+            * leave room auto folds, makes you out of the round, join room puts you in a seat when the next round starts
+            * maybe I'll be able to have multiple rooms! 

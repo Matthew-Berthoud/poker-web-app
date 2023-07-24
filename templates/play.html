@@ -5,5 +5,38 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Play</h1>
+    <div id="info-bar">
+
+
+    </div>
+    <div id="table">
+        <div id="seats">
+
+
+        </div>
+        <div id="middle">
+            <div id="river">
+
+
+            </div>
+            <div id="pot">
+
+
+            </div>
+        </div>
+    </div>
+    <div class="inputs" id="bet-slider">
+
+
+    </div>
+    <div class="inputs" id="sit-out-cash-out-buttons">
+
+    </div>
+    <div class="inputs" id="action-buttons">
+        <button id="fold" type="button">Fold</button>
+        <button id="check-or-call" type="button">Check/Call</button>
+        <button id="bet-or-raise" type="button">Bet/Raise</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+    <script src="static/scripts/play.js"></script>
 {% endblock %}

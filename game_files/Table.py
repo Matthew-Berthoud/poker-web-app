@@ -8,7 +8,7 @@ LOGS_ENABLED = True
 
 class Table:
 
-    class __Table_Seat:
+    class Table_Seat:
         def __init__(self, seat_number):
             self.is_occupied = False
             self.is_dealer = False
@@ -19,9 +19,10 @@ class Table:
             self.player_id = 0
             
             self.current_bet = 0.00
+            self.cards = []
 
     def __init__(self, maximum_seats = MAXIMUM_SEATS):
-        self.seat_list = [self.__Table_Seat(seat_number) for seat_number in range(1, maximum_seats + 1)]
+        self.seat_list = [self.Table_Seat(seat_number) for seat_number in range(1, maximum_seats + 1)]
 
         self.round_number = 0            # "Round" ends when new cards are dealt
         self.player_count = 0
@@ -30,6 +31,8 @@ class Table:
         self.small_blind_amount = round(self.big_blind_amount / 2, 2)
 
         self.pot = 0.00
+        self.deck = Deck()
+        self.river = []
    
 
     def __log(self, to_log):
@@ -51,7 +54,8 @@ class Table:
         return seat
 
 
-    def player_input(self, player_id, current_bet):
+    def player_input(self, player_id, current_bet): # https://chat.openai.com/share/f3f0f1a0-d940-4e19-b454-b1340eca0c85
+        self.update_frontend()
         action = random.choice(["fold", "call/check", "raise/bet"])
         if action == "fold":
             amount = ""
@@ -62,6 +66,11 @@ class Table:
         return [action, amount]
         # just for testing
         # finish later
+
+    def update_frontend():
+        pass
+        # https://www.youtube.com/watch?v=zQDzNNt6xd4
+
 
 
     def play_round(self, big_blind_amount, occupied_seats, dealer_seat):  # assign dealer and blinds
@@ -87,27 +96,33 @@ class Table:
         winner_or_none = None
         betting_round_number = 1
         while winner_or_none is None and betting_round_number <= FINAL_BETTING_ROUND:
-            self.deal_cards(betting_round_number)
+            if betting_round_number == 1:
+                for seat in self.seat_list:
+                    if seat.is_occupied:
+                        card1 = self.deck.pop()
+                        card2 = self.deck.pop()
+                        seat.cards = [card1, card2]
+                        self.__log(f"player {seat.player_number} cards: {seat.cards}")
+            elif betting_round_number == 2:
+                card1 = self.deck.pop()
+                card2 = self.deck.pop()
+                card3 = self.deck.pop()
+                self.river = [card1, card2, card3]
+                self.__log(f"river: {self.river}")
+            else:
+                card = self.deck.pop()
+                self.river += [card]
+                self.__log(f"river: {self.river}")
+            self.player_output()
+
             winner_or_none = self.play_betting_round(betting_round_number, small_blind_seat)
             betting_round_number += 1
 
-        return winner_or_none
-        # winner = determine_winner(winner_or_none)
-
-
-    def deal_cards(self, betting_round_number):
-        if betting_round_number == 1:
-            print("dealing 2 cards")
-            pass
-            # cards_to_players(2)
-        elif betting_round_number == 2:
-            print("dealing 3 to river")
-            pass
-            # river_cards(3)
-        else:
-            print("dealing 1 to river")
-            pass
-            # river_cards(1)
+        if winner_or_none is None:
+            winner = self.evaluate()
+        else;
+            winner = winner_or_none
+        return winner
 
 
     def play_betting_round(self, betting_round_number, small_blind_seat):
@@ -166,7 +181,9 @@ class Table:
 
             seat = self.get_next(seat)
 
-
+    def evaluate(self):
+        self.__log(f"evaluate: just returning one of the remaining players for now")
+        return [seat for seat in self.seat_list if seat.is_occupied][0]
 
 table = Table()
 
