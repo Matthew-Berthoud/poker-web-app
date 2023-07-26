@@ -6,7 +6,7 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from flask_socketio import SocketIO, send, emit
-from time import localtime, strftime
+from time import localtime, strftime, gmtime
 # from datetime import datetime  # can use comparison operators. Eg: time = datetime.now()
 # problem is it's not serializable to json oops
 
@@ -163,7 +163,7 @@ def play():
 def message(data):
     print(f"\n\n{data}\n\n")
     send({'username': data['username'], 'player_id': data['player_id'], 'action': data['action'], 'time_stamp': 
-        strftime('%Y%j%H%M%S', localtime())})  # https://docs.python.org/3/library/time.html
+        strftime('%Y%j%H%M%S', gmtime())})  # https://docs.python.org/3/library/time.html
 
 
 if __name__ == "__main__":
