@@ -12,6 +12,10 @@ from time import localtime, strftime, gmtime
 
 from helpers import login_required, usd
 
+
+from Table import Table
+from Deck import Card, Deck
+
 # Configure application
 app = Flask(__name__)
 
@@ -31,6 +35,13 @@ socketio = SocketIO(app)
 # Jinja Filter
 app.jinja_env.filters["usd"] = usd
 
+@app.after_request
+def after_request(response):
+    """Ensure responses aren't cached""" # no idea how or why, stole from cs50
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
 
 @app.route("/", methods=["GET", "POST"])
 @login_required
@@ -170,15 +181,10 @@ def message(data):
 @socketio.on('action_button')
 def action_button_clicked(action, slider, player):
     print(action, slider, player["username"])  # for testing
-    
-
-
-
-#     username = player["username"]
-#     player_id = player["player_id"]
-#     notification = f"{button_clicked} button clicked by {username}, id = {player_id}, slider at {slider}"
-#     print(notification)
-#     emit("global_notification", notification, broadcast=True)
+    username = player["username"]
+    notification = f"{action} from {username}, slider at {slider}"
+    print(notification)
+    emit("global_notification", notification, broadcast=True)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)

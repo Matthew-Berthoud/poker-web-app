@@ -1,6 +1,4 @@
 import random  # ONLY FOR TESTING BEFORE I IMPLEMENT player_input
-from Deck import *
-
 
 MAXIMUM_SEATS = 10
 FINAL_BETTING_ROUND = 4
@@ -37,9 +35,10 @@ class Table:
 
     def __log(self, to_log):
         if LOGS_ENABLED:
-            f = open("logs/Table_logs.txt", "a")
-            f.write(str(to_log) + "\n")
-            f.close()
+            print(to_log)
+            # f = open("logs/Table_logs.txt", "a")
+            # f.write(str(to_log) + "\n")
+            # f.close()
 
 
     def get_next(self, current_seat):
@@ -67,7 +66,7 @@ class Table:
         # just for testing
         # finish later
 
-    def update_frontend():
+    def update_frontend(self):
         pass
         # https://www.youtube.com/watch?v=zQDzNNt6xd4
 
@@ -102,7 +101,7 @@ class Table:
                         card1 = self.deck.pop()
                         card2 = self.deck.pop()
                         seat.cards = [card1, card2]
-                        self.__log(f"player {seat.player_number} cards: {seat.cards}")
+                        self.__log(f"player {seat.player_id} cards: {seat.cards}")
             elif betting_round_number == 2:
                 card1 = self.deck.pop()
                 card2 = self.deck.pop()
@@ -113,14 +112,14 @@ class Table:
                 card = self.deck.pop()
                 self.river += [card]
                 self.__log(f"river: {self.river}")
-            self.player_output()
+            self.update_frontend()
 
             winner_or_none = self.play_betting_round(betting_round_number, small_blind_seat)
             betting_round_number += 1
 
         if winner_or_none is None:
             winner = self.evaluate()
-        else;
+        else:
             winner = winner_or_none
         return winner
 
@@ -151,7 +150,7 @@ class Table:
                         break
                 if all_seats_paid:
                     self.__log(f"BREAK lap_number {lap_number} seat {seat.seat_number} current_bet {current_bet}")
-                    self.__log(f"seats still in: {}")
+                    # self.__log(f"seats still in: {}")
                     break
 
             if (betting_round_number == 1 and lap_number == 1 and (seat.is_small_blind or seat.is_big_blind)):
@@ -185,7 +184,7 @@ class Table:
         self.__log(f"evaluate: just returning one of the remaining players for now")
         return [seat for seat in self.seat_list if seat.is_occupied][0]
 
-table = Table()
+# table = Table()
 
-winner = table.play_round(big_blind_amount = 10.00, occupied_seats = [1,2,3,4,5], dealer_seat = 5)
-print(winner)
+# winner = table.play_round(big_blind_amount = 10.00, occupied_seats = [1,2,3,4,5], dealer_seat = 5)
+# print(winner)
