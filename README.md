@@ -119,10 +119,10 @@ pip install flask flask-sqlalchemy
     * it is okay to start at small blind every time cause it's emptiness / the weirdness of the first round will we accounted for in the huge if statement.
 
 
-*** July 18, 2023
+### July 18, 2023
 I thought Tables would have good methods for unit tests, but I don't know how to simulate player input and interaction with other functions / objects
 
-*** July 19, 2023
+### July 19, 2023
 * Today's plan is to 
     * test the stuff I've done even more
         * make necessary changes, commit
@@ -140,6 +140,15 @@ I thought Tables would have good methods for unit tests, but I don't know how to
     * evaluate between the players (can be the same method as when we got the best hand for each player)
     * return winner(s)
 * probably put current bet in the player class
+
+### July 26, 2023
+* The code below gives a string that looks like this `2023207000419` representing the year, day of year, hour, minutes, seconds so that when casted to an int I can use comparison operators.
+    ```py
+    strftime('%Y%j%H%M%S', localtime()
+    ```
+* Decided against adding room functionality at this time, there will only be the one room for now. Can use tutorial for flask socketio to add them later.
+* Finished the video, can refer to the first 40 minutes as I make all these requests work, and broadcast certain things to certain people
+
 
 ## AT SOME POINT I NEED TO ADD AN ALL-IN LIMIT TYPE THING TO THE METHODS IN THE TABLE CLASS, OR SIDE POTS WILL HAPPEN AND BE HANDLED IMPROPERLY
 

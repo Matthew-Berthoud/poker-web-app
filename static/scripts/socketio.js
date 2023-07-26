@@ -6,16 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
     //     socket.send("I am connected"); // send function goes to 'message' bucket by default
     // });
 
+    // display incoming messages
     socket.on('message', data => {
         const p = document.createElement('p');
         const span_timestamp = document.createElement('span');
-        span_timestamp.innerHTML = data.time
+        span_timestamp.innerHTML = data.time_stamp
         p.innerHTML = data.username + ' ' + data.action + ' ' + span_timestamp.outerHTML;
         document.querySelector('#seats').append(p);
-    });
-
-    socket.on('some-event', data => {
-        console.log(data);
     });
 
     // Send user input to server
