@@ -20,10 +20,8 @@
     </div>
     <div id="table">
         <div id="seats">
-            <script> // send player info back to server
-                const player = `{{ player }}`;
-                const player_id = `{{ player.player_id }}`;
-                const username = `{{ player.username }}`;
+            <script> // store info on front end so I can send player info back to server
+                const client = {{ player | tojson }};
             </script>
             <!-- <p id="player_username">{{ player.username }}</p> -->
 
@@ -39,9 +37,9 @@
             </div>
         </div>
     </div>
-    <div class="inputs" id="bet-slider">
-
-
+    <div class="inputs" id="bet-slider-div">
+        <label for="bet-slider" class="form-label">Bet size: $<span id="slider-value"></span></label>
+        <input type="range" class="form-range" min="0" max="{{ player.cash }}" step="0.01" value="0" id="bet-slider">
     </div>
     <div class="inputs" id="sit-out-cash-out-buttons">
 

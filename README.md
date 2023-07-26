@@ -149,6 +149,12 @@ I thought Tables would have good methods for unit tests, but I don't know how to
 * Decided against adding room functionality at this time, there will only be the one room for now. Can use tutorial for flask socketio to add them later.
 * Finished the video, can refer to the first 40 minutes as I make all these requests work, and broadcast certain things to certain people
 
+#### HERE'S HOW I'M USING SOCKETIO:
+* players clicking play button (implicitly joining the only (for now) room) will send a custom event to the server with a their player_id or username
+    * same with players leaving the page (there has to be a javascript event for this)
+* players clicking action buttons will send a json event to server, with player_id/username, what number the bet slider is at, which button they clicked, and maybe the time they clicked it if necessary for making sure it's their turn
+    * if it's their turn (which we probably don't need to know the time to determine, on second thought), the server will process the user input and send back json to update the board
+        * **this part may be hard to get right**
 
 ## AT SOME POINT I NEED TO ADD AN ALL-IN LIMIT TYPE THING TO THE METHODS IN THE TABLE CLASS, OR SIDE POTS WILL HAPPEN AND BE HANDLED IMPROPERLY
 

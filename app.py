@@ -18,6 +18,7 @@ app = Flask(__name__)
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config['SECRET_KEY'] = 'secret!' # necessary for socketio for some reason
 Session(app)
 
 # Configure CS50 Library to use SQLite database
@@ -162,9 +163,22 @@ def play():
 @socketio.on('message')
 def message(data):
     print(f"\n\n{data}\n\n")
-    send({'username': data['username'], 'player_id': data['player_id'], 'action': data['action'], 'time_stamp': 
-        strftime('%Y%j%H%M%S', gmtime())})  # https://docs.python.org/3/library/time.html
+    send(data)
+    # send({'username': data['username'], 'player_id': data['player_id'], 'action': data['action'], 'time_stamp': 
+    #     strftime('%Y%j%H%M%S', gmtime())})  # https://docs.python.org/3/library/time.html
 
+@socketio.on('action_button')
+def action_button_clicked(action, slider, player):
+    print(action, slider, player["username"])  # for testing
+    
+
+
+
+#     username = player["username"]
+#     player_id = player["player_id"]
+#     notification = f"{button_clicked} button clicked by {username}, id = {player_id}, slider at {slider}"
+#     print(notification)
+#     emit("global_notification", notification, broadcast=True)
 
 if __name__ == "__main__":
     socketio.run(app, debug=True)
