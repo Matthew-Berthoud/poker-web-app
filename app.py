@@ -190,6 +190,7 @@ def connected():
         if seat.player_id == player["player_id"]:
             seated = True
             seat_num = seat.seat_number
+            break
     if not seated:
         if table.player_count == 10:
             return "Table is full"
@@ -208,7 +209,10 @@ def disconnected():
     player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
     username = player["username"]
     print(f'\n\n{username} DISCONNECTED\n\n')
-    return redirect("/")
+    table.remove_player(session["user_id"])
+    send("fully_disconnected")
+
+
 
 @socketio.on('message')
 def message(data):
@@ -219,7 +223,6 @@ def message(data):
 
 @socketio.on('action_button')
 def action_button_clicked(action, slider, player):
-    print(action, slider, player["username"])  # for testing
     username = player["username"]
     notification = f"{action} from {username}, slider at {slider}"
     print(notification)

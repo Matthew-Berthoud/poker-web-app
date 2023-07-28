@@ -34,6 +34,16 @@ class Table:
         self.river = []
    
 
+    def remove_player(self, player_id):
+        for seat in self.seat_list:
+            if seat.player_id == player_id:
+                seat.is_occupied = False
+                seat.player_id = 0
+                seat.current_bet = 0.00
+                seat.cards = []
+                break
+
+
     def __log(self, to_log):
         if LOGS_ENABLED:
             print(to_log)

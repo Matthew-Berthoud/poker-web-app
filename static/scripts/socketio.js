@@ -32,12 +32,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // display incoming messages
     socket.on('message', data => {
         console.log(`message: ${data}`);
-        // const p = document.createElement('p');
-        // const span_timestamp = document.createElement('span');
-        // span_timestamp.innerHTML = data.time_stamp
-        // p.innerHTML = data.username + ' ' + data.action + ' ' + span_timestamp.outerHTML;
-        // document.querySelector('#seats').append(p);
+        if (data == 'fully_disconnected') {
+            window.location.href = '/';
+        }
     });
+
+
+    // Send quit button input to server
+    document.querySelector('#quit').onclick = () => {
+        socket.emit('disconnected');
+    };
 
     // Send action button input to server
     document.querySelector('#fold').onclick = () => {
