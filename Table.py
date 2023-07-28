@@ -1,4 +1,5 @@
 import random  # ONLY FOR TESTING BEFORE I IMPLEMENT player_input
+from Deck import Card, Deck
 
 MAXIMUM_SEATS = 10
 FINAL_BETTING_ROUND = 4
@@ -77,6 +78,7 @@ class Table:
         
         self.big_blind_amount = big_blind_amount
         
+        self.player_count = 0
         for seat_num in occupied_seats:
             self.seat_list[seat_num - 1].is_occupied = True
             self.player_count += 1

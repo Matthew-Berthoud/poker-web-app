@@ -7,12 +7,21 @@ document.addEventListener('DOMContentLoaded', () => {
         slider_label.innerHTML = bet_slider.value;
     })
     
-
     var socket = io();
 
-    // connect event: Player 
+
+
+
     socket.on('connect', () => {
-        socket.send("I am connected"); // send function goes to 'message' bucket by default
+        socket.emit('connected');
+    });
+
+    socket.on('disconnect', () => {
+        socket.emit('disconnected')
+    });
+
+    socket.on('player_joined', data => {
+        console.log(`${data.player.username} joined seat ${data.seat_num}`);
     });
 
     socket.on('global_notification', data => {

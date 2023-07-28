@@ -7,8 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from flask_socketio import SocketIO, send, emit
 from time import localtime, strftime, gmtime
-# from datetime import datetime  # can use comparison operators. Eg: time = datetime.now()
-# problem is it's not serializable to json oops
+import random  # for random seat when person joins
 
 from helpers import login_required, usd
 
@@ -31,14 +30,19 @@ db = SQL("sqlite:///poker.db")
 # Initialize Flask-SocketIO
 socketio = SocketIO(app)
 
-
 # Jinja Filter
 app.jinja_env.filters["usd"] = usd
+
+# INITIALIZE ALL THE GAME STUFF
+table = Table()
+
+
+
 
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached""" # no idea how or why, stole from cs50
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Cache-Control"] = "no-cache, no-store"#, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
@@ -168,7 +172,23 @@ def change_balance():
 @app.route("/play", methods=['GET', 'POST'])
 @login_required
 def play():
-    return render_template("play.html", player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0])
+    player = db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
+    return render_template("play.html", player=player)
+
+@socketio.on('connected')
+def connected():
+    player = db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
+    if table.player_count == 10:
+        return "Table is full"
+    seat_num = 1
+    while table.seat_list[seat_num - 1].is_occupied:
+        seat_num = random.randint(1,10)
+    table.player_count += 1
+    table.seat_list[seat_num - 1].player_id = player["player_id"]
+    table.seat_list[seat_num - 1].is_occupied = True
+    data = {"player": player, "seat_num": seat_num}
+    socketio.emit("player_joined", data)
+    return render_template("play.html", player=player, seat_num=seat_num)
 
 
 @socketio.on('message')
