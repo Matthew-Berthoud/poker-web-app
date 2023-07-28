@@ -34,9 +34,27 @@ class Table:
         self.river = []
    
 
+    def add_player(self, player_id):
+        for seat in self.seat_list:
+            if seat.player_id == player_id:
+                seat_num = seat.seat_number
+                return "already seated"
+        if self.player_count == 10:
+            return "full"
+
+        seat_num = 1
+        while self.seat_list[seat_num - 1].is_occupied:
+            seat_num = random.randint(1,10)
+        self.player_count += 1
+        self.seat_list[seat_num - 1].player_id = player_id
+        self.seat_list[seat_num - 1].is_occupied = True
+        return seat_num
+
+
     def remove_player(self, player_id):
         for seat in self.seat_list:
             if seat.player_id == player_id:
+                self.player_count -= 1
                 seat.is_occupied = False
                 seat.player_id = 0
                 seat.current_bet = 0.00
