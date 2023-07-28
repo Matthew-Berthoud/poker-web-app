@@ -186,7 +186,7 @@ def connected():
     elif status in range(1,11):
         socketio.emit("player_joined", (player, status))
 
-    print(f'\n\n{username} CONNECTED\n\n')    
+    print(f'\n{username} CONNECTED\n')    
     return render_template("play.html", player=player, seat_num=status)
 
 
@@ -195,15 +195,15 @@ def disconnected():
     player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
     username = player["username"]
     table.remove_player(session["user_id"])
-    
-    print(f'\n\n{username} DISCONNECTED\n\n')
+
+    print(f'\n{username} DISCONNECTED\n')
     send("fully_disconnected")
 
 
 
 @socketio.on('message')
 def message(data):
-    print(f"\n\n{data}\n\n")
+    print(f"\n{data}\n")
     send(data)
     # send({'username': data['username'], 'player_id': data['player_id'], 'action': data['action'], 'time_stamp': 
     #     strftime('%Y%j%H%M%S', gmtime())})  # https://docs.python.org/3/library/time.html
@@ -212,8 +212,8 @@ def message(data):
 def action_button_clicked(action, slider, player):
     username = player["username"]
     notification = f"{action} from {username}, slider at {slider}"
-    print(notification)
+    print(f"\n{notification:}\n")
     emit("global_notification", notification, broadcast=True)
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    socketio.run(app, port=8000, debug=True)  # https://stackoverflow.com/questions/72795799/how-to-solve-403-error-with-flask-in-python
