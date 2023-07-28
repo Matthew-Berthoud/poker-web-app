@@ -42,7 +42,7 @@ table = Table()
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached""" # no idea how or why, stole from cs50
-    response.headers["Cache-Control"] = "no-cache, no-store"#, must-revalidate"
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
@@ -177,19 +177,38 @@ def play():
 
 @socketio.on('connected')
 def connected():
+    
     player = db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
-    if table.player_count == 10:
-        return "Table is full"
-    seat_num = 1
-    while table.seat_list[seat_num - 1].is_occupied:
-        seat_num = random.randint(1,10)
-    table.player_count += 1
-    table.seat_list[seat_num - 1].player_id = player["player_id"]
-    table.seat_list[seat_num - 1].is_occupied = True
-    data = {"player": player, "seat_num": seat_num}
-    socketio.emit("player_joined", data)
+    username = player["username"]
+    print(f'\n\n{username} CONNECTED\n\n')    
+    
+    # could definitely make a field in the database for whether they joined or not, so I don't have to loop this every time'
+        # this works tho so do it later
+    
+    seated = False
+    for seat in table.seat_list:
+        if seat.player_id == player["player_id"]:
+            seated = True
+            seat_num = seat.seat_number
+    if not seated:
+        if table.player_count == 10:
+            return "Table is full"
+        seat_num = 1
+        while table.seat_list[seat_num - 1].is_occupied:
+            seat_num = random.randint(1,10)
+        table.player_count += 1
+        table.seat_list[seat_num - 1].player_id = player["player_id"]
+        table.seat_list[seat_num - 1].is_occupied = True
+        socketio.emit("player_joined", (player, seat_num))
     return render_template("play.html", player=player, seat_num=seat_num)
 
+
+@socketio.on('disconnected')
+def disconnected():
+    player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
+    username = player["username"]
+    print(f'\n\n{username} DISCONNECTED\n\n')
+    return redirect("/")
 
 @socketio.on('message')
 def message(data):

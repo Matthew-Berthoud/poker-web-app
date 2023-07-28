@@ -17,20 +17,21 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('disconnect', () => {
-        socket.emit('disconnected')
+        socket.emit('disconnected');
     });
 
-    socket.on('player_joined', data => {
-        console.log(`${data.player.username} joined seat ${data.seat_num}`);
+
+    socket.on('player_joined', (player, seat_num) => {
+        console.log(`${player.username} joined seat ${seat_num}`);
     });
 
     socket.on('global_notification', data => {
-        console.log(`sent via global_notification event from server to this client: ${data}`);
+        console.log(`global_notif: ${data}`);
     });
 
     // display incoming messages
     socket.on('message', data => {
-        console.log(`sent via message event from server to this client: ${data}`);
+        console.log(`message: ${data}`);
         // const p = document.createElement('p');
         // const span_timestamp = document.createElement('span');
         // span_timestamp.innerHTML = data.time_stamp
