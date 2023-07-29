@@ -21,21 +21,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    socket.on('player_joined', (player, seat_num) => {
+    socket.on('player_joined', (player, seat_num, player_count) => {
         console.log(`${player.username} joined seat ${seat_num}`);
+        if (player_count > 1) {
+            socket.emit('start_or_continue_game');
+        }
     });
+
+    socket.on('player_left', (player, seat_num, player_count) => {
+        console.log(`${player.username} left seat ${seat_num}`);
+        if (player_count < 2) {
+            socket.emit('end_game');
+        }
+        window.location.href = '/';
+    })
+
 
     socket.on('global_notification', data => {
         console.log(`global_notif: ${data}`);
     });
 
     // display incoming messages
-    socket.on('message', data => {
-        console.log(`message: ${data}`);
-        if (data == 'fully_disconnected') {
-            window.location.href = '/';
-        }
-    });
+    // socket.on('message', data => {
+    //     console.log(`message: ${data}`);
+    // });
 
 
     // Send quit button input to server

@@ -184,7 +184,7 @@ def connected():
     if status == "full":
         return "table full"
     elif status in range(1,11):
-        socketio.emit("player_joined", (player, status))
+        socketio.emit("player_joined", (player, status, table.player_count))
 
     print(f'\n{username} CONNECTED\n')    
     return render_template("play.html", player=player, seat_num=status)
@@ -194,12 +194,9 @@ def connected():
 def disconnected():
     player=db.execute("SELECT * FROM players WHERE player_id = ?", session["user_id"])[0]
     username = player["username"]
-    table.remove_player(session["user_id"])
-
+    removed_seat_num = table.remove_player(session["user_id"])
     print(f'\n{username} DISCONNECTED\n')
-    send("fully_disconnected")
-
-
+    emit("player_left", (player, removed_seat_num, table.player_count))        
 
 @socketio.on('message')
 def message(data):
@@ -207,6 +204,16 @@ def message(data):
     send(data)
     # send({'username': data['username'], 'player_id': data['player_id'], 'action': data['action'], 'time_stamp': 
     #     strftime('%Y%j%H%M%S', gmtime())})  # https://docs.python.org/3/library/time.html
+
+@socketio.on('start_or_continue_game')
+def start_or_continue_game():
+    print("\nSTART/CONTINUE GAME\n")
+
+@socketio.on('end_game')
+def end_game():
+    print("\nEND GAME\n")
+
+
 
 @socketio.on('action_button')
 def action_button_clicked(action, slider, player):

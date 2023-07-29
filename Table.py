@@ -52,14 +52,16 @@ class Table:
 
 
     def remove_player(self, player_id):
+        seat_num = 0
         for seat in self.seat_list:
+            seat_num += 1
             if seat.player_id == player_id:
                 self.player_count -= 1
                 seat.is_occupied = False
                 seat.player_id = 0
                 seat.current_bet = 0.00
                 seat.cards = []
-                break
+                return seat_num
 
 
     def __log(self, to_log):
