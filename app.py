@@ -8,12 +8,102 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from flask_socketio import SocketIO, send, emit
 from time import localtime, strftime, gmtime
 import random  # for random seat when person joins
+import time # for sleep
+
 
 from helpers import login_required, usd
 
 
-from Table import Table
 from Deck import Card, Deck
+
+
+MAXIMUM_SEATS = 10
+FINAL_BETTING_ROUND = 4
+LOGS_ENABLED = True
+
+class Table:
+
+    class Table_Seat:
+        def __init__(self, seat_number):
+            self.is_occupied = False
+            self.is_dealer = False
+            self.is_small_blind = False
+            self.is_big_blind = False
+
+            self.seat_number = seat_number
+            self.player_id = 0
+            
+            self.current_bet = 0.00
+            self.cards = []
+
+    def __init__(self, maximum_seats = MAXIMUM_SEATS):
+        self.seat_list = [self.Table_Seat(seat_number) for seat_number in range(1, maximum_seats + 1)]
+
+        self.round_number = 0            # "Round" ends when new cards are dealt
+        self.player_count = 0
+        
+        self.big_blind_amount = 10.00
+        self.small_blind_amount = round(self.big_blind_amount / 2, 2)
+
+        self.pot = 0.00
+        self.deck = Deck()
+        self.river = []
+        self.game_active = False
+   
+
+    def add_player(self, player_id):
+        for seat in self.seat_list:
+            if seat.player_id == player_id:
+                seat_num = seat.seat_number
+                return "already seated"
+        if self.player_count == 10:
+            return "full"
+
+        seat_num = 1
+        while self.seat_list[seat_num - 1].is_occupied:
+            seat_num = random.randint(1,10)
+        self.player_count += 1
+        self.seat_list[seat_num - 1].player_id = player_id
+        self.seat_list[seat_num - 1].is_occupied = True
+        return seat_num
+
+
+    def remove_player(self, player_id):
+        seat_num = 0
+        for seat in self.seat_list:
+            seat_num += 1
+            if seat.player_id == player_id:
+                self.player_count -= 1
+                seat.is_occupied = False
+                seat.player_id = 0
+                seat.current_bet = 0.00
+                seat.cards = []
+                return seat_num
+
+
+    # def __log(self, to_log):
+    #     if LOGS_ENABLED:
+    #         print(to_log)
+            # f = open("logs/Table_logs.txt", "a")
+            # f.write(str(to_log) + "\n")
+            # f.close()
+
+
+    def get_next(self, current_seat):
+        # increments by 1 since seat_number is already 1 ahead of index
+        return self.seat_list[current_seat.seat_number % MAXIMUM_SEATS]
+    
+
+    def get_next_occupied(self, current_seat):
+        seat = self.get_next(current_seat)
+        while not seat.is_occupied:
+            seat = self.get_next(seat)
+        return seat
+
+
+# INITIALIZE ALL THE GAME STUFF
+table = Table()
+
 
 # Configure application
 app = Flask(__name__)
@@ -32,10 +122,6 @@ socketio = SocketIO(app)
 
 # Jinja Filter
 app.jinja_env.filters["usd"] = usd
-
-# INITIALIZE ALL THE GAME STUFF
-table = Table()
-
 
 
 
@@ -208,6 +294,11 @@ def message(data):
 @socketio.on('start_or_continue_game')
 def start_or_continue_game():
     print("\nSTART/CONTINUE GAME\n")
+    if not table.game_active:
+        table.game_active = True
+        start_or_continue_game()
+    else:
+        play_round(big_blind_amount = 10, dealer_seat = 1)
 
 @socketio.on('end_game')
 def end_game():
@@ -221,6 +312,132 @@ def action_button_clicked(action, slider, player):
     notification = f"{action} from {username}, slider at {slider}"
     print(f"\n{notification:}\n")
     emit("global_notification", notification, broadcast=True)
+
+
+
+def player_input(player_id, current_bet): # https://chat.openai.com/share/f3f0f1a0-d940-4e19-b454-b1340eca0c85
+    # https://www.youtube.com/watch?v=zQDzNNt6xd4
+    # secs = 0
+
+    # while secs < 30:
+    #     time.sleep(1)
+    pass
+
+
+def play_round(big_blind_amount, dealer_seat):  # assign dealer and blinds
+    table.round_number += 1
+    table.big_blind_amount = big_blind_amount
+    
+    # table.player_count = 0
+    # for seat_num in occupied_seats:
+    #     table.seat_list[seat_num - 1].is_occupied = True
+    #     table.player_count += 1
+    # if dealer_seat not in occupied_seats:
+    #     raise IndexError
+    
+    dealer = table.seat_list[dealer_seat - 1]
+    dealer.is_dealer = True
+
+    small_blind_seat = table.get_next_occupied(dealer)
+    small_blind_seat.is_small_blind = True
+    send("I am big blind")
+
+    big_blind_seat = table.get_next_occupied(small_blind_seat)
+    big_blind_seat.is_big_blind = True
+    send("I am small blind")
+    
+    winner_or_none = None
+    betting_round_number = 1
+    while winner_or_none is None and betting_round_number <= FINAL_BETTING_ROUND:
+        if betting_round_number == 1:
+            for seat in table.seat_list:
+                if seat.is_occupied:
+                    card1 = table.deck.pop()
+                    card2 = table.deck.pop()
+                    seat.cards = [card1, card2]
+                    send("My cards: " + str(seat.cards))
+        elif betting_round_number == 2:
+            card1 = table.deck.pop()
+            card2 = table.deck.pop()
+            card3 = table.deck.pop()
+            table.river = [card1, card2, card3]
+            emit("global_notification", "river: "+ str(table.river))
+        else:
+            card = table.deck.pop()
+            table.river += [card]
+            emit("global_notification", "river: "+ str(table.river))
+
+        winner_or_none = play_betting_round(betting_round_number, small_blind_seat)
+        betting_round_number += 1
+
+    if winner_or_none is None:
+        winner = evaluate()
+    else:
+        winner = winner_or_none
+    return winner
+
+
+def play_betting_round(betting_round_number, small_blind_seat):
+    seat = small_blind_seat
+    lap_number = 0
+    current_bet = 0.00
+    
+    send(f"\n\n\n\nplay_betting_round {betting_round_number} small_blind_seat {small_blind_seat.seat_number}")
+
+    while True:
+        if seat == small_blind_seat:
+            lap_number += 1
+
+        send(f"lap {lap_number} seat {seat.seat_number} cur_bet {current_bet}")
+
+        if not seat.is_occupied:
+            seat = table.get_next(seat)
+            continue
+
+        first_round_big_blind = ((betting_round_number == 1) and (lap_number == 2) and seat.is_big_blind)
+        if (lap_number > 1 and not first_round_big_blind):
+            all_seats_paid = True
+            for seat in table.seat_list:
+                if seat.is_occupied and (seat.current_bet != current_bet):
+                    all_seats_paid = False
+                    break
+            if all_seats_paid:
+                send(f"BREAK lap_number {lap_number} seat {seat.seat_number} current_bet {current_bet}")
+                break
+
+        if (betting_round_number == 1 and lap_number == 1 and (seat.is_small_blind or seat.is_big_blind)):
+            if seat.is_small_blind:
+                action = ["raise/bet", table.small_blind_amount]
+            else:
+                action = ["raise/bet", table.big_blind_amount]
+        else:
+            action = player_input(player_id = seat.player_id, current_bet = current_bet)
+        
+        if action[0] == "fold":
+            seat.is_occupied = False
+            table.player_count -= 1
+        elif action[1] < current_bet:
+            raise ValueError  # should have been handled by player_input method or frontend
+        else:
+            current_bet = round(action[1], 2)
+            seat.current_bet = current_bet
+            # update other variables
+
+        send(f"Seat {seat.seat_number} {action[0].upper()} {action[1]}")
+        
+        if table.player_count < 2:
+            return table.get_next_occupied(seat)
+            # returns the winner
+            # but where will it return to?
+
+        seat = table.get_next(seat)
+
+def evaluate():
+    send(f"evaluate: just returning one of the remaining players for now")
+    return [seat for seat in table.seat_list if seat.is_occupied][0]
+
+
+
 
 if __name__ == "__main__":
     socketio.run(app, port=8000, debug=True)  # https://stackoverflow.com/questions/72795799/how-to-solve-403-error-with-flask-in-python

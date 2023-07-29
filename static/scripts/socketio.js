@@ -42,9 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // display incoming messages
-    // socket.on('message', data => {
-    //     console.log(`message: ${data}`);
-    // });
+    socket.on('message', data => {
+        console.log(`message: ${data}`);
+    });
 
 
     // Send quit button input to server

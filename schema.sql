@@ -10,7 +10,8 @@ CREATE TABLE players (
     date_joined DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     username TEXT NOT NULL,
     pswd_hash TEXT NOT NULL,
-    cash NUMERIC NOT NULL DEFAULT 0.00
+    cash NUMERIC NOT NULL DEFAULT 0.00,
+    accepting_input NUMERIC DEFAULT 0
 );
 CREATE UNIQUE INDEX username ON players (username);
 
